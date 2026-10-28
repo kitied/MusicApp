@@ -1,15 +1,17 @@
-# NOIR Music
+# NOIR Music 0.2 (test build)
 
-Native iOS offline music player with direct audio stream URLs. Built using Expo SDK 58, React Native, and TypeScript.
+Native iOS music player for local audio and direct stream URLs. Built using Expo SDK 58, Expo Router, React Native, and TypeScript. The Yandex Music catalog is **not** integrated; imported Yandex metadata will not imply playback access.
 
-## Implemented in prototype
+## Implemented
 
 - Import audio from Files and copy it to persistent app documents storage.
 - Save direct HTTP(S) audio URLs and play them as streams.
-- Persistent track library, search, delete (long press a track).
-- Full-screen player and floating mini-player, playback controls.
-- Background audio mode and iOS lock-screen metadata configured.
-- Dark translucent, glass-inspired layout.
+- SQLite-backed library, search, liked tracks, recent plays, and delete (long press a track).
+- Automatic one-time migration of the v0.1 AsyncStorage library to SQLite.
+- Separate full-screen player and glass mini-player, seek-on-tap progress bar.
+- Background audio mode and iOS lock-screen metadata configured, with explicit live-stream flag.
+- Native Liquid Glass when available, BlurView fallback otherwise.
+- Basic MP3 ID3v2.3/v2.4 metadata and embedded JPEG/PNG artwork parsing (other formats use the filename fallback).
 
 ## Run locally on Windows
 
@@ -29,4 +31,8 @@ Native iOS offline music player with direct audio stream URLs. Built using Expo 
 
 ## Next improvements
 
-Metadata artwork/artist parsing, playlists and queue UI, seek slider, stream buffering and connection retry, granular track list, error recovery, accessibility and UI polish.
+M4A/FLAC metadata parsing, more robust ID3 compatibility, playlists and editable queue UI, improved seek slider, direct-stream buffering and reconnect, richer cover artwork fallback, Yandex playlist metadata import (subject to supported access), NOIR Wave recommendations, accessibility and animations.
+
+## Updating an installed iPhone app
+
+Build a new unsigned IPA in Actions and re-sign using the same Apple ID and bundle identifier. Update in place if Sideloadly permits it. Back up irreplaceable music before testing; deleting an iOS app can delete its documents, database and imported audio.

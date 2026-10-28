@@ -27,7 +27,14 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      ["expo-audio", { "enableBackgroundPlayback": true }]
+      [
+        "expo-audio",
+        {
+          "enableBackgroundPlayback": true
+        }
+      ],
+      "expo-router",
+      "expo-sqlite"
     ]
   }
 }
