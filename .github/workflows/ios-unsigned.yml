@@ -1,0 +1,40 @@
+name: Build unsigned iOS IPA
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-26
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Generate native iOS project
+        run: CI=1 npx expo prebuild --platform ios --clean
+      - name: Install iOS dependencies
+        run: pod install --project-directory=ios
+      - name: Build device application without signing
+        run: |
+          xcodebuild -workspace ios/NOIRMusic.xcworkspace \
+            -scheme NOIRMusic \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath "$RUNNER_TEMP/noir-build" \
+            CODE_SIGNING_ALLOWED=NO build
+      - name: Package unsigned IPA
+        run: |
+          mkdir -p "$RUNNER_TEMP/ipa/Payload"
+          cp -R "$RUNNER_TEMP/noir-build/Build/Products/Release-iphoneos/NOIRMusic.app" "$RUNNER_TEMP/ipa/Payload/"
+          cd "$RUNNER_TEMP/ipa"
+          zip -qry "$GITHUB_WORKSPACE/NOIR-Music-unsigned.ipa" Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NOIR-Music-unsigned-ipa
+          path: NOIR-Music-unsigned.ipa
+          retention-days: 7
